@@ -1,0 +1,106 @@
+<project default="deploy" basedir=".">
+	
+
+    <property file="build.properties"/>
+
+
+    <!-- 
+        DEV environment 
+    -->
+    <target name="dev.clean">
+    	<delete dir="${dev.classes.dir}"/>
+    </target>
+
+
+
+    <target name="dev.init" depends="dev.clean">
+    	<mkdir dir="${dev.classes.dir}"/>
+    </target>
+
+
+	
+	<target name="dev.compile" depends="dev.init">
+        <path id="master-classpath">
+          <fileset dir="${dev.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${local.tomcat.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </path>
+
+        <javac srcdir="${src.dir}" destdir="${dev.classes.dir}">
+            <classpath refid="master-classpath"/>
+        </javac>
+    </target>
+
+
+
+    <!-- 
+        LOCAL-DEPLOYMENT environment 
+    -->
+    <target name="local.init" depends="dev.compile">
+        <delete dir="${local.dir}"/>
+        <mkdir dir="${local.dir}"/>
+        <mkdir dir="${local.dir}/WEB-INF"/>
+        <mkdir dir="${local.dir}/WEB-INF/classes"/>
+        <mkdir dir="${local.dir}/WEB-INF/lib"/>
+    </target>
+
+
+
+    <target name="local.deploy.copying" depends="local.init, local.tomcat.stop">
+
+    	<copy todir="${local.dir}/WEB-INF/classes">
+    		<fileset dir="${dev.classes.dir}">
+    			<include name="**"/>
+    		</fileset>
+		</copy>
+
+        <copy todir="${local.dir}">
+            <fileset dir="${web.dir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+         <copy todir="${local.lib.dir}">
+            <fileset dir="${dev.lib.dir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+		<copy todir="${local.dir}/WEB-INF" file="etc/web.xml"/>
+        <copy todir="${local.dir}/WEB-INF" file="conf/config.properties"/>
+    </target>	    
+
+
+
+    <target name="local.tomcat.stop">
+        <exec dir="." executable="service" os="Linux">
+            <arg line="tomcat7 stop"/>
+        </exec>
+    </target>
+
+
+
+
+    <target name="local.tomcat.start">
+        <exec dir="." executable="service" os="Linux">
+            <arg line="tomcat7 start"/>
+        </exec>
+    </target>
+
+
+
+    <target name="local.deploy" depends="local.deploy.copying, local.tomcat.start">
+    </target>
+
+
+
+    <!-- 
+        SERVER.DEPLOYMENT environment 
+    -->
+
+
+
+</project>
