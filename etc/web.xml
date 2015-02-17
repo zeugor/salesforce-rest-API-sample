@@ -3,5 +3,23 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 	
+	<servlet>
+		<servlet-name>OAuth</servlet-name>
+		<servlet-class>com.zeugor.salesforce.OAuthServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>DemoREST</servlet-name>
+		<servlet-class>com.zeugor.salesforce.DemoREST</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>OAuth</servlet-name>
+		<url-pattern>/oauth/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DemoREST</servlet-name>
+		<url-pattern>/DemoREST</url-pattern>
+	</servlet-mapping>
+
 
 </web-app>
