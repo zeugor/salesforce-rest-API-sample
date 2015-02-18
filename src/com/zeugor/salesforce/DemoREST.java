@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.apache.log4j.Logger;
 
-//@WebServlet(urlPatterns = { "/DemoREST" })
 public class DemoREST extends HttpServlet {
 	final static Logger logger = Logger.getLogger(DemoREST.class);
 

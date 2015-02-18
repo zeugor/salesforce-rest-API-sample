@@ -22,17 +22,6 @@ import org.json.JSONTokener;
 
 import java.util.Properties;
 
-/**
- * Servlet parameters
- */
-/*@WebServlet(name = "oauth", urlPatterns = { "/oauth/*", "/oauth" }, initParams = {
-		// clientId is 'Consumer Key' in the Remote Access UI
-		@WebInitParam(name = "clientId", value = ""),
-		// clientSecret is 'Consumer Secret' in the Remote Access UI
-		@WebInitParam(name = "clientSecret", value = ""),
-		// This must be identical to 'Callback URL' in the Remote Access UI
-		@WebInitParam(name = "redirectUri", value = ""),
-		@WebInitParam(name = "environment", value = ""), })*/
 public class OAuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -47,29 +36,17 @@ public class OAuthServlet extends HttpServlet {
 	private String tokenUrl = null;
 
 	public void init() throws ServletException {
-		/*
-		clientId = this.getInitParameter("clientId");
-		clientSecret = this.getInitParameter("clientSecret");
-		redirectUri = this.getInitParameter("redirectUri");
-		environment = this.getInitParameter("environment");
-		*/
 
-		Properties prop = new Properties();
 		InputStream input = null;
 		try {
+			Properties prop = new Properties();
 			prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
-
-
-			System.out.println("hola");
-			//input = new FileInputStream("/config.properties");
-			//prop.load(input);
 
 	 		clientId = prop.getProperty("clientId");
 	 		System.out.println("clientId: " + clientId);
 			clientSecret = prop.getProperty("clientSecret");
 			redirectUri = prop.getProperty("redirectUri");
 			environment = prop.getProperty("environment");
-	 
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
