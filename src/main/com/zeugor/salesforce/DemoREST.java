@@ -6,8 +6,6 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,12 +17,11 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.apache.log4j.Logger;
 
 public class DemoREST extends HttpServlet {
 	final static Logger logger = Logger.getLogger(DemoREST.class);
@@ -71,7 +68,7 @@ public class DemoREST extends HttpServlet {
 								+ ", "
 								+ results.getJSONObject(i).getString("Name")
 								+ "\n");
-						
+
 					}
 					writer.write("\n");
 				} catch (JSONException e) {
@@ -128,7 +125,7 @@ public class DemoREST extends HttpServlet {
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
-					//throw new ServletException(e);
+					// throw new ServletException(e);
 				}
 			}
 		} finally {
@@ -161,7 +158,7 @@ public class DemoREST extends HttpServlet {
 					writer.write("Account content\n\n");
 
 					Iterator iterator = response.keys();
-					while (iterator.hasNext()) {
+					while(iterator.hasNext()) {
 						String key = (String) iterator.next();
 						Object value = response.get(key);
 
@@ -235,9 +232,9 @@ public class DemoREST extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter writer = response.getWriter();

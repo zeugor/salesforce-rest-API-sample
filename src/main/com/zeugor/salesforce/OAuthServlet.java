@@ -1,15 +1,13 @@
 package com.zeugor.salesforce;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,35 +18,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.util.Properties;
-
 public class OAuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 	private static final String INSTANCE_URL = "INSTANCE_URL";
 
-	private String clientId = null;
-	private String clientSecret = null;
-	private String redirectUri = null;
-	private String environment = null;
-	private String authUrl = null;
-	private String tokenUrl = null;
+	private String clientId;
+	private String clientSecret;
+	private String redirectUri;
+	private String environment;
+	private String authUrl;
+	private String tokenUrl;
 
+	@Override
 	public void init() throws ServletException {
 
 		InputStream input = null;
 		try {
 			Properties prop = new Properties();
-			prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
+			prop.load(getServletContext().getResourceAsStream("/conf/config.properties"));
 
-	 		clientId = prop.getProperty("clientId");
-	 		System.out.println("clientId: " + clientId);
+			clientId = prop.getProperty("clientId");
+			System.out.println("clientId: " + clientId);
 			clientSecret = prop.getProperty("clientSecret");
 			redirectUri = prop.getProperty("redirectUri");
 			environment = prop.getProperty("environment");
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		} catch (Exception e) {
+			// show log4j message telling you dont have the config.properties file
+			System.out.println(">> /WEB-INF/conf.properties no found.");
+			e.printStackTrace();
 		} finally {
 			if (input != null) {
 				try {
@@ -57,14 +58,14 @@ public class OAuthServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
-		}		
-
+		}
 
 		try {
 			authUrl = environment
 					+ "/services/oauth2/authorize?response_type=code&client_id="
 					+ clientId + "&redirect_uri="
 					+ URLEncoder.encode(redirectUri, "UTF-8");
+			System.out.println("authUrl: " + authUrl);
 		} catch (UnsupportedEncodingException e) {
 			throw new ServletException(e);
 		}
@@ -72,8 +73,9 @@ public class OAuthServlet extends HttpServlet {
 		tokenUrl = environment + "/services/oauth2/token";
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response)  throws ServletException, IOException {
+			HttpServletResponse response) throws ServletException, IOException {
 		String accessToken = (String) request.getSession().getAttribute(
 				ACCESS_TOKEN);
 

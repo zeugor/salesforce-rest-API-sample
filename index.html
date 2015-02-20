@@ -6,12 +6,14 @@
 </head>
 <body>
 <script type="text/javascript" language="javascript">
-	if (location.protocol != "https:") {
+
+	// in case of not localhost testing uncomment and enable ssl in server
+	/*if (location.protocol != "https:") {
 		document.write("OAuth will not work correctly from plain http. "+
 				"Please use an https URL.");
-	} else {
+	} else {*/
 		document.write("<a href=\"oauth\">Click here to retrieve contacts from Salesforce via REST/OAuth.</a>");
-	}
+	/*}*/
 </script>
 </body>
 </html>
